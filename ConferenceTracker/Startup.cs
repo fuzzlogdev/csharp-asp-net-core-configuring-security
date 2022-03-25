@@ -15,7 +15,7 @@ namespace ConferenceTracker
 {
     public class Startup
     {
-        public readonly string _allowOrigins = "_allowedOrigins";
+        public readonly string _allowedOrigins = "_allowedOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -45,7 +45,7 @@ namespace ConferenceTracker
 
             services.AddCors(options =>
             {
-                options.AddPolicy(_allowOrigins, builder =>
+                options.AddPolicy(_allowedOrigins, builder =>
                 {
                     builder.WithOrigins("https://www.pluralsight.com");
                 });
@@ -61,6 +61,7 @@ namespace ConferenceTracker
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
                 logger.LogInformation("Environment is in development");
             }
             else
@@ -72,7 +73,7 @@ namespace ConferenceTracker
             using (var context = scope.ServiceProvider.GetService<ApplicationDbContext>())
                 context.Database.EnsureCreated();
 
-            app.UseCors(_allowOrigins);
+            app.UseCors(_allowedOrigins);
 
             app.UseHttpsRedirection();
 
